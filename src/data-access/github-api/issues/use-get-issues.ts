@@ -1,7 +1,8 @@
 import request from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
-import { FragmentType } from '../../../gql';
+import { FragmentType, getFragmentData } from '../../../gql';
 import { IssueFragment, getIssuesQuery } from './get-issues.graphql';
+import { GetIssuesQuery, IssueItemFragment } from '@gql/graphql';
 
 export type IssueItem = FragmentType<typeof IssueFragment>;
 
@@ -9,7 +10,7 @@ interface UseGetIssuesResult {
   isLoading: boolean;
   isError: boolean;
   refetch: () => Promise<void>;
-  data: IssueItem[];
+  data: IssueItemFragment[];
 }
 
 export function useGetIssues(): UseGetIssuesResult {
@@ -18,7 +19,7 @@ export function useGetIssues(): UseGetIssuesResult {
     isLoading,
     isError,
     refetch: refetchQuery,
-  } = useQuery({
+  } = useQuery<GetIssuesQuery, unknown, IssueItemFragment[]>({
     queryKey: ['get-issues'],
     queryFn: async () => {
       return request(
@@ -31,6 +32,26 @@ export function useGetIssues(): UseGetIssuesResult {
         },
       );
     },
+    select: (data): IssueItemFragment[] => {
+      if (!data.repository || !data.repository.issues.edges) {
+        return [];
+      }
+
+      const remappedIssues = data.repository.issues.edges.reduce(
+        (issues: IssueItemFragment[], edge) => {
+          if (edge?.node) {
+            const issue = getFragmentData(IssueFragment, edge.node);
+
+            return [...issues, issue];
+          }
+
+          return issues;
+        },
+        [],
+      );
+
+      return remappedIssues;
+    },
   });
 
   const refetch = async (): Promise<void> => {
@@ -41,6 +62,6 @@ export function useGetIssues(): UseGetIssuesResult {
     isLoading,
     isError,
     refetch,
-    data: data?.repository?.issues.edges ?? [],
+    data: data ?? [],
   };
 }
