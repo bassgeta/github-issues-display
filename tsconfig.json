@@ -20,8 +20,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@gql/*": ["src/gql/*"],
-      "@data-access/*": ["src/data-access/*"]
+      "@gql/*": ["./src/gql/*"],
+      "@data-access/*": ["./src/data-access/*"],
+      "@design-system/*": ["./src/design-system/*"]
     }
   },
   "include": ["src"],

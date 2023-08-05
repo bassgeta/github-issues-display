@@ -1,0 +1,44 @@
+.loader {
+  position: relative;
+
+  width: var(--loader-size);
+  height: var(--loader-size);
+
+  color: var(--loader-color);
+
+  animation: loader-keyframes-circular-rotate 1.4s linear infinite;
+
+  .loader-svg {
+    display: block;
+  }
+
+  .loader-circle {
+    stroke: currentColor;
+    animation: loader-keyframes-circular-dash 1.4s ease-in-out infinite;
+    stroke-dasharray: 80px, 200px;
+    stroke-dashoffset: 0px;
+  }
+}
+
+@keyframes loader-keyframes-circular-rotate {
+  0% {
+    transform-origin: 50% 50%;
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader-keyframes-circular-dash {
+  0% {
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: 0px;
+  }
+  50% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -15px;
+  }
+  100% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -125px;
+  }
+}
