@@ -2,9 +2,19 @@ import request from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
 import { FragmentType, getFragmentData } from '../../../gql';
 import { IssueFragment, getIssuesQuery } from './get-issues.graphql';
-import { GetIssuesQuery, IssueItemFragment } from '@gql/graphql';
+import {
+  GetIssuesQuery,
+  IssueItemFragment,
+  IssueOrderField,
+  OrderDirection,
+} from '@gql/graphql';
 
 export type IssueItem = FragmentType<typeof IssueFragment>;
+
+export interface UseGetIssuesParams {
+  sortField?: IssueOrderField;
+  sortDirection?: OrderDirection;
+}
 
 interface UseGetIssuesResult {
   isLoading: boolean;
@@ -13,19 +23,30 @@ interface UseGetIssuesResult {
   data: IssueItemFragment[];
 }
 
-export function useGetIssues(): UseGetIssuesResult {
+export function useGetIssues({
+  sortDirection,
+  sortField,
+}: UseGetIssuesParams): UseGetIssuesResult {
   const {
     data,
     isLoading,
     isError,
     refetch: refetchQuery,
   } = useQuery<GetIssuesQuery, unknown, IssueItemFragment[]>({
-    queryKey: ['get-issues'],
+    queryKey: ['get-issues', { sortDirection, sortField }],
     queryFn: async () => {
       return request(
         'https://api.github.com/graphql',
         getIssuesQuery,
-        undefined,
+        {
+          orderByValues:
+            sortDirection && sortField
+              ? {
+                  direction: sortDirection,
+                  field: sortField,
+                }
+              : null,
+        },
         {
           Authorization: `Bearer ${import.meta.env.VITE_GITHUB_ACCESS_TOKEN}`,
           'User-Agent': 'Flawless challenge',
@@ -52,6 +73,8 @@ export function useGetIssues(): UseGetIssuesResult {
 
       return remappedIssues;
     },
+    cacheTime: 1000 * 60 * 2,
+    staleTime: 1000 * 60 * 2,
   });
 
   const refetch = async (): Promise<void> => {

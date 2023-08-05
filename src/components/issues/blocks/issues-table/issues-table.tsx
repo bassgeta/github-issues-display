@@ -26,6 +26,7 @@ export const IssuesTable: FC<IssuesTableContentProps> = ({ issues }) => {
       sorting: sortingState,
     },
     onSortingChange: (getNewSort) => {
+      // workaround because of wonky typings
       if (typeof getNewSort === 'function') {
         const newSort = getNewSort(sortingState);
 

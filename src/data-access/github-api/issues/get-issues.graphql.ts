@@ -1,9 +1,9 @@
 import { graphql } from '../../../gql';
 
 export const getIssuesQuery = graphql(`
-  query GetIssues {
+  query GetIssues($orderByValues: IssueOrder) {
     repository(owner: "facebook", name: "react") {
-      issues(states: OPEN, first: 25) {
+      issues(states: OPEN, first: 25, orderBy: $orderByValues) {
         totalCount
         edges {
           node {
