@@ -16,6 +16,10 @@
       border-bottom: 1px solid var(--bg-secondary);
     }
 
+    .can-sort {
+      cursor: pointer;
+    }
+
     td {
       font-size: var(--font-size-m);
       color: var(--text-primary);

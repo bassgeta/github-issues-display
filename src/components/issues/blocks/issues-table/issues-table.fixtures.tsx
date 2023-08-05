@@ -7,15 +7,16 @@ const columnHelper = createColumnHelper<IssueItemFragment>();
 export const tableColumns: ColumnDef<IssueItemFragment, any>[] = [
   columnHelper.accessor('title', {
     header: 'Title',
+    enableSorting: false,
     cell: ({ getValue }) => {
       return <span>{getValue()}</span>;
     },
   }),
   columnHelper.accessor('author', {
     header: 'Author',
+    enableSorting: false,
     cell: ({ getValue }) => {
       const author = getValue();
-      console.log('ma autor', author);
       if (author) {
         return <span>{author.login}</span>;
       }
@@ -25,12 +26,14 @@ export const tableColumns: ColumnDef<IssueItemFragment, any>[] = [
   }),
   columnHelper.accessor('state', {
     header: 'State',
+    enableSorting: false,
     cell: ({ getValue }) => {
       return <span>{getValue()}</span>;
     },
   }),
   columnHelper.accessor('createdAt', {
-    header: 'Status',
+    header: 'Created at',
+    enableSorting: true,
     cell: ({ getValue }) => {
       return <span>{getValue()}</span>;
     },

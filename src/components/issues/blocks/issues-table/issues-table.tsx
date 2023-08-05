@@ -7,6 +7,7 @@ import {
 import { FC, useMemo } from 'react';
 import { tableColumns } from './issues-table.fixtures';
 import './issues-table.css';
+import { useIssuesState } from '../../issues.state';
 
 interface IssuesTableContentProps {
   isLoading: boolean;
@@ -14,11 +15,25 @@ interface IssuesTableContentProps {
 }
 
 export const IssuesTable: FC<IssuesTableContentProps> = ({ issues }) => {
+  const { sortingState, setSortingState } = useIssuesState();
+
   const columns = useMemo(() => tableColumns, []);
   const { getRowModel, getHeaderGroups } = useReactTable({
     columns,
     data: issues,
     getCoreRowModel: getCoreRowModel(),
+    state: {
+      sorting: sortingState,
+    },
+    onSortingChange: (getNewSort) => {
+      if (typeof getNewSort === 'function') {
+        const newSort = getNewSort(sortingState);
+
+        setSortingState(newSort);
+      } else {
+        setSortingState(getNewSort);
+      }
+    },
   });
   const headerGroups = getHeaderGroups();
   const { rows } = getRowModel();
@@ -29,16 +44,23 @@ export const IssuesTable: FC<IssuesTableContentProps> = ({ issues }) => {
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr>
-              {headerGroup.headers.map((column) =>
-                column.id.includes('hidden') ? null : (
-                  <th>
-                    {flexRender(
-                      column.column.columnDef.header,
-                      column.getContext(),
-                    )}
-                  </th>
-                ),
-              )}
+              {headerGroup.headers.map((header) => (
+                <th
+                  onClick={header.column.getToggleSortingHandler()}
+                  className={
+                    header.column.getCanSort() ? 'can-sort' : undefined
+                  }
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+                  {{
+                    asc: ' 🔼',
+                    desc: ' 🔽',
+                  }[header.column.getIsSorted() as string] ?? null}
+                </th>
+              ))}
             </tr>
           ))}
         </thead>
