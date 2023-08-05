@@ -13,7 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query GetIssues {\n    repository(owner: \"facebook\", name: \"react\") {\n      issues(states: OPEN, first: 100) {\n        totalCount\n        edges {\n          node {\n            title\n            url\n            createdAt\n            updatedAt\n            author {\n              login\n            }\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n": types.GetIssuesDocument,
+    "\n  query GetIssues {\n    repository(owner: \"facebook\", name: \"react\") {\n      issues(states: OPEN, first: 25) {\n        totalCount\n        edges {\n          node {\n            ...IssueItem\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n": types.GetIssuesDocument,
+    "\n  fragment IssueItem on Issue {\n    id\n    title\n    url\n    createdAt\n    author {\n      avatarUrl\n      login\n    }\n    state\n  }\n": types.IssueItemFragmentDoc,
 };
 
 /**
@@ -33,7 +34,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetIssues {\n    repository(owner: \"facebook\", name: \"react\") {\n      issues(states: OPEN, first: 100) {\n        totalCount\n        edges {\n          node {\n            title\n            url\n            createdAt\n            updatedAt\n            author {\n              login\n            }\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetIssues {\n    repository(owner: \"facebook\", name: \"react\") {\n      issues(states: OPEN, first: 100) {\n        totalCount\n        edges {\n          node {\n            title\n            url\n            createdAt\n            updatedAt\n            author {\n              login\n            }\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query GetIssues {\n    repository(owner: \"facebook\", name: \"react\") {\n      issues(states: OPEN, first: 25) {\n        totalCount\n        edges {\n          node {\n            ...IssueItem\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetIssues {\n    repository(owner: \"facebook\", name: \"react\") {\n      issues(states: OPEN, first: 25) {\n        totalCount\n        edges {\n          node {\n            ...IssueItem\n          }\n        }\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment IssueItem on Issue {\n    id\n    title\n    url\n    createdAt\n    author {\n      avatarUrl\n      login\n    }\n    state\n  }\n"): (typeof documents)["\n  fragment IssueItem on Issue {\n    id\n    title\n    url\n    createdAt\n    author {\n      avatarUrl\n      login\n    }\n    state\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

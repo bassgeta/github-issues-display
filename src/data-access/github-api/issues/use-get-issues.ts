@@ -1,34 +1,24 @@
 import request from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
-import { graphql } from '../../../gql';
+import { FragmentType } from '../../../gql';
+import { IssueFragment, getIssuesQuery } from './get-issues.graphql';
 
-const getIssuesQuery = graphql(`
-  query GetIssues {
-    repository(owner: "facebook", name: "react") {
-      issues(states: OPEN, first: 100) {
-        totalCount
-        edges {
-          node {
-            title
-            url
-            createdAt
-            updatedAt
-            author {
-              login
-            }
-          }
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
-      }
-    }
-  }
-`);
+export type IssueItem = FragmentType<typeof IssueFragment>;
 
-export function useGetIssues() {
-  const { data, isLoading } = useQuery({
+interface UseGetIssuesResult {
+  isLoading: boolean;
+  isError: boolean;
+  refetch: () => Promise<void>;
+  data: IssueItem[];
+}
+
+export function useGetIssues(): UseGetIssuesResult {
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch: refetchQuery,
+  } = useQuery({
     queryKey: ['get-issues'],
     queryFn: async () => {
       return request(
@@ -43,5 +33,14 @@ export function useGetIssues() {
     },
   });
 
-  return { data, isLoading };
+  const refetch = async (): Promise<void> => {
+    await refetchQuery();
+  };
+
+  return {
+    isLoading,
+    isError,
+    refetch,
+    data: data?.repository?.issues.edges ?? [],
+  };
 }

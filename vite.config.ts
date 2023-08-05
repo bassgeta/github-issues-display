@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@data-access': path.resolve(__dirname, './src/data-access'),
       '@gql': path.resolve(__dirname, './src/gql'),
+      '@data-access': path.resolve(__dirname, './src/data-access'),
     },
   },
 });
