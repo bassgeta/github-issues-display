@@ -1,0 +1,7 @@
+.button-base {
+  border-radius: 4px;
+  padding: var(--space-s);
+
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}

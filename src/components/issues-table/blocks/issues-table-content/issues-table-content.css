@@ -1,0 +1,27 @@
+.issues-table-content {
+  width: 100%;
+  padding: 0 var(--space-m);
+
+  table {
+    width: 100%;
+    border-spacing: 0;
+
+    th {
+      font-size: var(--font-size-m);
+      font-weight: bold;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+      text-align: left;
+      padding: var(--space-xs) var(--space-s);
+      border-bottom: 1px solid var(--bg-secondary);
+    }
+
+    td {
+      font-size: var(--font-size-m);
+      color: var(--text-primary);
+      text-align: left;
+      padding: var(--space-xs) var(--space-s);
+      border-bottom: 1px solid var(--bg-secondary);
+    }
+  }
+}
