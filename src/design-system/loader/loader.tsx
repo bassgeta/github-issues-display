@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { CSSProperties, FC } from 'react';
 import './loader.css';
 
 interface LoaderProps {
@@ -12,10 +12,12 @@ export const Loader: FC<LoaderProps> = ({
 }) => (
   <div
     className="loader"
-    style={{
-      '--loader-size': `${size}px`,
-      '--loader-color': `var(${color})`,
-    }}
+    style={
+      {
+        '--loader-size': `${size}px`,
+        '--loader-color': `var(${color})`,
+      } as CSSProperties
+    }
   >
     <svg className="loader-svg" viewBox="22 22 44 44">
       <circle
