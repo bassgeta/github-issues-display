@@ -5,15 +5,15 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import { FC, useMemo } from 'react';
-import { tableColumns } from './issues-table-content.fixtures';
-import './issues-table-content.css';
+import { tableColumns } from './issues-table.fixtures';
+import './issues-table.css';
 
 interface IssuesTableContentProps {
   isLoading: boolean;
   issues: IssueItemFragment[];
 }
 
-export const IssueTableContent: FC<IssuesTableContentProps> = ({ issues }) => {
+export const IssuesTable: FC<IssuesTableContentProps> = ({ issues }) => {
   const columns = useMemo(() => tableColumns, []);
   const { getRowModel, getHeaderGroups } = useReactTable({
     columns,
@@ -24,7 +24,7 @@ export const IssueTableContent: FC<IssuesTableContentProps> = ({ issues }) => {
   const { rows } = getRowModel();
 
   return (
-    <div className="issues-table-content">
+    <div className="issues-table">
       <table>
         <thead>
           {headerGroups.map((headerGroup) => (

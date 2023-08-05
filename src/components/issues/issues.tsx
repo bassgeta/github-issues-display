@@ -1,11 +1,11 @@
 import { useGetIssues } from '@data-access/github-api/issues/use-get-issues';
 import { Loader } from '@design-system/loader/loader';
 import { FC } from 'react';
-import './issues-table.css';
 import { Button } from '@design-system/button/button';
-import { IssueTableContent } from './blocks/issues-table-content/issues-table-content';
+import { IssuesTable } from './blocks/issues-table/issues-table';
+import './issues.css';
 
-export const IssuesTable: FC = () => {
+export const Issues: FC = () => {
   const getIssuesQuery = useGetIssues();
 
   function getContent() {
@@ -30,7 +30,7 @@ export const IssuesTable: FC = () => {
 
     if (getIssuesQuery.data) {
       return (
-        <IssueTableContent
+        <IssuesTable
           isLoading={getIssuesQuery.isLoading}
           issues={getIssuesQuery.data}
         />
@@ -40,5 +40,5 @@ export const IssuesTable: FC = () => {
     return null;
   }
 
-  return <div className="issues-table">{getContent()}</div>;
+  return <div className="issues">{getContent()}</div>;
 };
