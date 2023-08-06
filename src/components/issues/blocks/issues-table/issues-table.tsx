@@ -49,9 +49,6 @@ export const IssuesTable: FC<IssuesTableContentProps> = ({ issues }) => {
       <table>
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>State</th>
             <th
               className="can-sort"
               onClick={() => {
@@ -60,6 +57,10 @@ export const IssuesTable: FC<IssuesTableContentProps> = ({ issues }) => {
             >
               Created at {getSortingAdornment(IssueOrderField.CreatedAt)}
             </th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>State</th>
+            <th>Link</th>
           </tr>
         </thead>
         <tbody>
