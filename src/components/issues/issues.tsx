@@ -1,7 +1,4 @@
-import {
-  useGetIssues,
-  UseGetIssuesParams,
-} from '@data-access/github-api/issues';
+import { useGetIssues } from '@data-access/github-api/issues';
 import { Loader } from '@design-system/loader/loader';
 import { FC, useMemo } from 'react';
 import { Button } from '@design-system/button/button';

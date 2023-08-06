@@ -1,5 +1,6 @@
 import { IssueItemFragment } from '@gql/graphql';
 import { FC, useState } from 'react';
+import { createPortal } from 'react-dom';
 import './issue-row.css';
 import { Button } from '@design-system/button/button';
 import { EditIssueModal } from '../../../edit-issue-modal/edit-issue-modal';
@@ -46,14 +47,17 @@ export const IssueRow: FC<IssueRowProps> = ({ issue }) => {
           </div>
         </td>
       </tr>
-      {isEditing && (
-        <EditIssueModal
-          handleClose={() => {
-            setIsEditing(false);
-          }}
-          issue={issue}
-        />
-      )}
+      {/* So we don't have a modal inside a table :) */}
+      {isEditing &&
+        createPortal(
+          <EditIssueModal
+            handleClose={() => {
+              setIsEditing(false);
+            }}
+            issue={issue}
+          />,
+          document.body,
+        )}
     </>
   );
 };
