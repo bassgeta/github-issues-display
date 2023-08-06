@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -24,5 +25,11 @@ export default defineConfig({
     postcss: {
       plugins: [postcssNesting],
     },
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+    include: ['**/*.spec.tsx', '**/*.spec.ts'],
+    globals: true,
   },
 });
