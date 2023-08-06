@@ -7,6 +7,8 @@ import { IssuesQueryData, UseGetIssuesParams } from './interfaces';
 import { getIssuesQueryKey, getQueryVariables } from './helpers';
 
 // This could also be reworked into useInfiniteQuery and holding local state about the page number
+// Optimization possible, when going back, the page gets refetched due to the query key being different
+// We could use cursors for query keys, or go for infinite query
 export function useGetIssues(params: UseGetIssuesParams) {
   return useQuery<GetIssuesQuery, unknown, IssuesQueryData | null>({
     queryKey: getIssuesQueryKey(params),
