@@ -1,7 +1,7 @@
 import {
-  UseGetIssuesParams,
   useGetIssues,
-} from '@data-access/github-api/issues/use-get-issues';
+  UseGetIssuesParams,
+} from '@data-access/github-api/issues';
 import { Loader } from '@design-system/loader/loader';
 import { FC, useMemo } from 'react';
 import { Button } from '@design-system/button/button';
@@ -10,10 +10,14 @@ import './issues.css';
 import { useIssuesState } from './issues.state';
 
 export const Issues: FC = () => {
-  const { sortingParams } = useIssuesState();
+  const { sortingParams, paginationParams, setPaginationParams } =
+    useIssuesState();
   const getIssuesParams: UseGetIssuesParams = useMemo(() => {
-    return sortingParams ?? {};
-  }, [sortingParams]);
+    return {
+      ...(sortingParams ?? {}),
+      ...(paginationParams ?? {}),
+    };
+  }, [sortingParams, paginationParams]);
 
   const getIssuesQuery = useGetIssues(getIssuesParams);
 
@@ -33,16 +37,44 @@ export const Issues: FC = () => {
       );
     }
 
-    if (getIssuesQuery.isLoading && getIssuesQuery.data.length === 0) {
+    if (getIssuesQuery.isLoading && getIssuesQuery.data === null) {
       return <Loader />;
     }
 
     if (getIssuesQuery.data) {
+      const { issues, paginationInfo } = getIssuesQuery.data;
       return (
-        <IssuesTable
-          isLoading={getIssuesQuery.isLoading}
-          issues={getIssuesQuery.data}
-        />
+        <>
+          <div>
+            <button
+              disabled={!paginationInfo.hasPreviousPage}
+              onClick={() => {
+                if (paginationInfo.startCursor) {
+                  setPaginationParams({
+                    paginationDirection: 'before',
+                    paginationCursor: paginationInfo.startCursor,
+                  });
+                }
+              }}
+            >
+              Prev
+            </button>
+            <button
+              disabled={!paginationInfo.hasNextPage}
+              onClick={() => {
+                if (paginationInfo.endCursor) {
+                  setPaginationParams({
+                    paginationDirection: 'after',
+                    paginationCursor: paginationInfo.endCursor,
+                  });
+                }
+              }}
+            >
+              Next
+            </button>
+          </div>
+          <IssuesTable isLoading={getIssuesQuery.isLoading} issues={issues} />
+        </>
       );
     }
 

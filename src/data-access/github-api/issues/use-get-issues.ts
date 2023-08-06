@@ -1,51 +1,36 @@
 import request from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
-import { FragmentType, getFragmentData } from '../../../gql';
+import { getFragmentData } from '../../../gql';
 import { IssueFragment, getIssuesQuery } from './get-issues.graphql';
+import { GetIssuesQuery, IssueItemFragment } from '@gql/graphql';
 import {
-  GetIssuesQuery,
-  IssueItemFragment,
-  IssueOrderField,
-  OrderDirection,
-} from '@gql/graphql';
+  IssuesQueryData,
+  UseGetIssuesParams,
+  UseGetIssuesResult,
+} from './interfaces';
+import { getQueryVariables } from './helpers';
 
-export type IssueItem = FragmentType<typeof IssueFragment>;
-
-export interface UseGetIssuesParams {
-  sortField?: IssueOrderField;
-  sortDirection?: OrderDirection;
-}
-
-interface UseGetIssuesResult {
-  isLoading: boolean;
-  isError: boolean;
-  refetch: () => Promise<void>;
-  data: IssueItemFragment[];
-}
-
-export function useGetIssues({
-  sortDirection,
-  sortField,
-}: UseGetIssuesParams): UseGetIssuesResult {
+// This could also be reworked into useInfiniteQuery and holding local state about the page number
+export function useGetIssues(params: UseGetIssuesParams): UseGetIssuesResult {
+  const { sortDirection, sortField, paginationCursor, paginationDirection } =
+    params;
   const {
     data,
     isLoading,
     isError,
     refetch: refetchQuery,
-  } = useQuery<GetIssuesQuery, unknown, IssueItemFragment[]>({
-    queryKey: ['get-issues', { sortDirection, sortField }],
+  } = useQuery<GetIssuesQuery, unknown, IssuesQueryData | null>({
+    queryKey: [
+      'get-issues',
+      { sortDirection, sortField },
+      { paginationCursor, paginationDirection },
+    ],
     queryFn: async () => {
       return request(
         'https://api.github.com/graphql',
         getIssuesQuery,
         {
-          orderByValues:
-            sortDirection && sortField
-              ? {
-                  direction: sortDirection,
-                  field: sortField,
-                }
-              : null,
+          ...getQueryVariables(params),
         },
         {
           Authorization: `Bearer ${import.meta.env.VITE_GITHUB_ACCESS_TOKEN}`,
@@ -53,9 +38,9 @@ export function useGetIssues({
         },
       );
     },
-    select: (data): IssueItemFragment[] => {
+    select: (data): IssuesQueryData | null => {
       if (!data.repository || !data.repository.issues.edges) {
-        return [];
+        return null;
       }
 
       const remappedIssues = data.repository.issues.edges.reduce(
@@ -71,10 +56,12 @@ export function useGetIssues({
         [],
       );
 
-      return remappedIssues;
+      return {
+        issues: remappedIssues,
+        paginationInfo: data.repository.issues.pageInfo,
+      };
     },
-    cacheTime: 1000 * 60 * 2,
-    staleTime: 1000 * 60 * 2,
+    keepPreviousData: true,
   });
 
   const refetch = async (): Promise<void> => {
@@ -85,6 +72,6 @@ export function useGetIssues({
     isLoading,
     isError,
     refetch,
-    data: data ?? [],
+    data: data ?? null,
   };
 }
