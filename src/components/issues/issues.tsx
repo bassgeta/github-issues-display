@@ -8,10 +8,10 @@ import { Button } from '@design-system/button/button';
 import { IssuesTable } from './blocks/issues-table/issues-table';
 import './issues.css';
 import { useIssuesState } from './issues.state';
+import { Pagination } from './blocks/pagination/pagination';
 
 export const Issues: FC = () => {
-  const { sortingParams, paginationParams, setPaginationParams } =
-    useIssuesState();
+  const { sortingParams, paginationParams } = useIssuesState();
   const getIssuesParams: UseGetIssuesParams = useMemo(() => {
     return {
       ...(sortingParams ?? {}),
@@ -43,36 +43,10 @@ export const Issues: FC = () => {
 
     if (getIssuesQuery.data) {
       const { issues, paginationInfo } = getIssuesQuery.data;
+
       return (
         <>
-          <div>
-            <button
-              disabled={!paginationInfo.hasPreviousPage}
-              onClick={() => {
-                if (paginationInfo.startCursor) {
-                  setPaginationParams({
-                    paginationDirection: 'before',
-                    paginationCursor: paginationInfo.startCursor,
-                  });
-                }
-              }}
-            >
-              Prev
-            </button>
-            <button
-              disabled={!paginationInfo.hasNextPage}
-              onClick={() => {
-                if (paginationInfo.endCursor) {
-                  setPaginationParams({
-                    paginationDirection: 'after',
-                    paginationCursor: paginationInfo.endCursor,
-                  });
-                }
-              }}
-            >
-              Next
-            </button>
-          </div>
+          <Pagination {...paginationInfo} />
           <IssuesTable isLoading={getIssuesQuery.isLoading} issues={issues} />
         </>
       );

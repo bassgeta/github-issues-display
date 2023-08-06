@@ -1,7 +1,7 @@
-import { CSSProperties, FC, HTMLAttributes } from 'react';
+import { ButtonHTMLAttributes, CSSProperties, FC } from 'react';
 import './button.css';
 
-interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary';
 }
 

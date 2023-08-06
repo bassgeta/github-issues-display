@@ -2,6 +2,7 @@
   margin-top: var(--space-l);
   width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
 
   .error-container {
