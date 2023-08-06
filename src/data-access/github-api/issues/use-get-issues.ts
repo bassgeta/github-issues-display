@@ -3,23 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import { getFragmentData } from '../../../gql';
 import { IssueFragment, getIssuesQuery } from './get-issues.graphql';
 import { GetIssuesQuery, IssueItemFragment } from '@gql/graphql';
-import {
-  IssuesQueryData,
-  UseGetIssuesParams,
-  UseGetIssuesResult,
-} from './interfaces';
+import { IssuesQueryData, UseGetIssuesParams } from './interfaces';
 import { getQueryVariables } from './helpers';
 
 // This could also be reworked into useInfiniteQuery and holding local state about the page number
-export function useGetIssues(params: UseGetIssuesParams): UseGetIssuesResult {
+export function useGetIssues(params: UseGetIssuesParams) {
   const { sortDirection, sortField, paginationCursor, paginationDirection } =
     params;
-  const {
-    data,
-    isLoading,
-    isError,
-    refetch: refetchQuery,
-  } = useQuery<GetIssuesQuery, unknown, IssuesQueryData | null>({
+  return useQuery<GetIssuesQuery, unknown, IssuesQueryData | null>({
     queryKey: [
       'get-issues',
       { sortDirection, sortField },
@@ -63,15 +54,4 @@ export function useGetIssues(params: UseGetIssuesParams): UseGetIssuesResult {
     },
     keepPreviousData: true,
   });
-
-  const refetch = async (): Promise<void> => {
-    await refetchQuery();
-  };
-
-  return {
-    isLoading,
-    isError,
-    refetch,
-    data: data ?? null,
-  };
 }

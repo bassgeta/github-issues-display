@@ -16,10 +16,3 @@ export interface IssuesQueryData {
   issues: IssueItemFragment[];
   paginationInfo: PageInfo;
 }
-
-export interface UseGetIssuesResult {
-  isLoading: boolean;
-  isError: boolean;
-  refetch: () => Promise<void>;
-  data: IssuesQueryData | null;
-}

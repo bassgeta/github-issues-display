@@ -11,6 +11,7 @@
   --button-bg-secondary: #0abdc6;
   --button-text-primary: var(--text-primary);
   --button-text-secondary: var(--text-primary);
+  --button-bg-disabled: #666;
 
   --space-xxs: 4px;
   --space-xs: 8px;

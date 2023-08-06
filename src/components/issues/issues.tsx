@@ -29,7 +29,9 @@ export const Issues: FC = () => {
           <Button
             className="refetch-btn"
             variant="secondary"
-            onClick={getIssuesQuery.refetch}
+            onClick={async () => {
+              await getIssuesQuery.refetch();
+            }}
           >
             Try again?
           </Button>
@@ -37,7 +39,7 @@ export const Issues: FC = () => {
       );
     }
 
-    if (getIssuesQuery.isLoading && getIssuesQuery.data === null) {
+    if (getIssuesQuery.isFetching && getIssuesQuery.data === null) {
       return <Loader />;
     }
 
@@ -47,7 +49,12 @@ export const Issues: FC = () => {
       return (
         <>
           <Pagination {...paginationInfo} />
-          <IssuesTable isLoading={getIssuesQuery.isLoading} issues={issues} />
+          <IssuesTable issues={issues} />
+          {getIssuesQuery.isFetching && (
+            <div className="loader-container">
+              <Loader size={64} />{' '}
+            </div>
+          )}
         </>
       );
     }

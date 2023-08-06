@@ -9,7 +9,6 @@ import { useIssuesState } from '../../issues.state';
 import { IssueRow } from '../issue-row/issue-row';
 
 interface IssuesTableContentProps {
-  isLoading: boolean;
   issues: IssueItemFragment[];
 }
 

@@ -4,4 +4,9 @@
 
   background-color: var(--bg-color);
   color: var(--text-color);
+
+  &:disabled {
+    background-color: var(--button-bg-disabled);
+    cursor: not-allowed;
+  }
 }
