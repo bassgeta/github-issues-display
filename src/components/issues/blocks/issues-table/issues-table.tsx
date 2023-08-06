@@ -1,13 +1,12 @@
-import { IssueItemFragment } from '@gql/graphql';
 import {
-  getCoreRowModel,
-  useReactTable,
-  flexRender,
-} from '@tanstack/react-table';
-import { FC, useMemo } from 'react';
-import { tableColumns } from './issues-table.fixtures';
+  IssueItemFragment,
+  IssueOrderField,
+  OrderDirection,
+} from '@gql/graphql';
+import { FC } from 'react';
 import './issues-table.css';
 import { useIssuesState } from '../../issues.state';
+import { IssueRow } from '../issue-row/issue-row';
 
 interface IssuesTableContentProps {
   isLoading: boolean;
@@ -15,73 +14,59 @@ interface IssuesTableContentProps {
 }
 
 export const IssuesTable: FC<IssuesTableContentProps> = ({ issues }) => {
-  const { sortingState, setSortingState } = useIssuesState();
+  const { sortingParams, setSortingParams } = useIssuesState();
 
-  const columns = useMemo(() => tableColumns, []);
-  const { getRowModel, getHeaderGroups } = useReactTable({
-    columns,
-    data: issues,
-    getCoreRowModel: getCoreRowModel(),
-    state: {
-      sorting: sortingState,
-    },
-    onSortingChange: (getNewSort) => {
-      // workaround because of wonky typings
-      if (typeof getNewSort === 'function') {
-        const newSort = getNewSort(sortingState);
+  function handleOnSortClick(field: IssueOrderField): void {
+    // If sorting anew or for the first time
+    if (sortingParams === null || field !== sortingParams.sortField) {
+      setSortingParams({ sortField: field, sortDirection: OrderDirection.Asc });
+      return;
+    }
 
-        setSortingState(newSort);
-      } else {
-        setSortingState(getNewSort);
-      }
-    },
-  });
-  const headerGroups = getHeaderGroups();
-  const { rows } = getRowModel();
+    if (sortingParams.sortDirection === OrderDirection.Asc) {
+      setSortingParams({
+        sortField: field,
+        sortDirection: OrderDirection.Desc,
+      });
+      return;
+    }
+
+    if (sortingParams.sortDirection === OrderDirection.Desc) {
+      setSortingParams(null);
+      return;
+    }
+  }
+
+  function getSortingAdornment(field: IssueOrderField) {
+    if (sortingParams === null || field !== sortingParams.sortField) {
+      return null;
+    }
+
+    return sortingParams.sortDirection === OrderDirection.Asc ? '🔼' : '🔽';
+  }
 
   return (
     <div className="issues-table">
       <table>
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr>
-              {headerGroup.headers.map((header) => (
-                <th
-                  onClick={header.column.getToggleSortingHandler()}
-                  className={
-                    header.column.getCanSort() ? 'can-sort' : undefined
-                  }
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                  {{
-                    asc: ' 🔼',
-                    desc: ' 🔽',
-                  }[header.column.getIsSorted() as string] ?? null}
-                </th>
-              ))}
-            </tr>
-          ))}
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>State</th>
+            <th
+              className="can-sort"
+              onClick={() => {
+                handleOnSortClick(IssueOrderField.CreatedAt);
+              }}
+            >
+              Created at {getSortingAdornment(IssueOrderField.CreatedAt)}
+            </th>
+          </tr>
         </thead>
         <tbody>
-          {rows.map((row) => {
-            return (
-              <tr>
-                {row.getAllCells().map((cell) => {
-                  return (
-                    <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+          {issues.map((issue) => (
+            <IssueRow key={issue.id} issue={issue} />
+          ))}
         </tbody>
       </table>
     </div>
