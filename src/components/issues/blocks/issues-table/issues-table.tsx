@@ -12,6 +12,7 @@ interface IssuesTableContentProps {
   issues: IssueItemFragment[];
 }
 
+// Note that sorting is a bit wonky, since we can only sort by the field that is the default one
 export const IssuesTable: FC<IssuesTableContentProps> = ({ issues }) => {
   const { sortingParams, setSortingParams } = useIssuesState();
 

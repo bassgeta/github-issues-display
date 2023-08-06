@@ -1,9 +1,10 @@
 import { IssueItemFragment } from '@gql/graphql';
 import { FC, useState } from 'react';
 import { createPortal } from 'react-dom';
-import './issue-row.css';
 import { Button } from '@design-system/button/button';
 import { EditIssueModal } from '../../../edit-issue-modal/edit-issue-modal';
+import { RemoveIssueModal } from '../../../remove-issue-modal/remove-issue-modal';
+import './issue-row.css';
 
 interface IssueRowProps {
   issue: IssueItemFragment;
@@ -11,6 +12,7 @@ interface IssueRowProps {
 
 export const IssueRow: FC<IssueRowProps> = ({ issue }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   return (
     <>
@@ -41,7 +43,13 @@ export const IssueRow: FC<IssueRowProps> = ({ issue }) => {
             >
               ✏️
             </Button>
-            <Button variant="destructive" className="action-btn">
+            <Button
+              variant="destructive"
+              className="action-btn"
+              onClick={() => {
+                setIsRemoving(true);
+              }}
+            >
               🗑️
             </Button>
           </div>
@@ -53,6 +61,16 @@ export const IssueRow: FC<IssueRowProps> = ({ issue }) => {
           <EditIssueModal
             handleClose={() => {
               setIsEditing(false);
+            }}
+            issue={issue}
+          />,
+          document.body,
+        )}
+      {isRemoving &&
+        createPortal(
+          <RemoveIssueModal
+            handleClose={() => {
+              setIsRemoving(false);
             }}
             issue={issue}
           />,
