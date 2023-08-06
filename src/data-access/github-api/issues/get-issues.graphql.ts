@@ -11,6 +11,8 @@ export const getIssuesQuery = graphql(`
           }
         }
         pageInfo {
+          hasPreviousPage
+          startCursor
           hasNextPage
           endCursor
         }
