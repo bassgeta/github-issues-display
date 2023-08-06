@@ -1,7 +1,22 @@
 import { GetIssuesQueryVariables } from '@gql/graphql';
 import { UseGetIssuesParams } from './interfaces';
+import { QueryKey } from '@tanstack/react-query';
 
 const PAGE_SIZE = 25;
+
+export function getIssuesQueryKey({
+  paginationCursor,
+  paginationDirection,
+  sortDirection,
+  sortField,
+}: UseGetIssuesParams): QueryKey {
+  return [
+    'get-issues',
+    { sortDirection, sortField },
+    { paginationCursor, paginationDirection },
+  ];
+}
+
 export function getQueryVariables({
   paginationCursor,
   paginationDirection,

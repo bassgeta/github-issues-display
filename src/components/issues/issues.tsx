@@ -9,17 +9,16 @@ import { IssuesTable } from './blocks/issues-table/issues-table';
 import './issues.css';
 import { useIssuesState } from './issues.state';
 import { Pagination } from './blocks/pagination/pagination';
+import { getIssuesParams } from './helpers';
 
 export const Issues: FC = () => {
   const { sortingParams, paginationParams } = useIssuesState();
-  const getIssuesParams: UseGetIssuesParams = useMemo(() => {
-    return {
-      ...(sortingParams ?? {}),
-      ...(paginationParams ?? {}),
-    };
-  }, [sortingParams, paginationParams]);
+  const getIssuesQueryParams = useMemo(
+    () => getIssuesParams(sortingParams, paginationParams),
+    [sortingParams, paginationParams],
+  );
 
-  const getIssuesQuery = useGetIssues(getIssuesParams);
+  const getIssuesQuery = useGetIssues(getIssuesQueryParams);
 
   function getContent() {
     if (getIssuesQuery.isError) {

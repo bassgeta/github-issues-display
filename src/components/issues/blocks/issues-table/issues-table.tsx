@@ -61,6 +61,7 @@ export const IssuesTable: FC<IssuesTableContentProps> = ({ issues }) => {
             <th>Author</th>
             <th>State</th>
             <th>Link</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>

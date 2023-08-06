@@ -2,13 +2,22 @@
   .author {
     display: inline-flex;
     align-items: center;
-
-    margin-top: auto;
   }
 
   .user-avatar {
     width: 40px;
     height: 40px;
     margin-right: var(--space-xs);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+  }
+
+  .action-btn {
+    padding: var(--space-xxs) var(--space-xs);
+    font-size: var(--font-size-m);
   }
 }

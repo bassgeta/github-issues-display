@@ -4,18 +4,12 @@ import { getFragmentData } from '../../../gql';
 import { IssueFragment, getIssuesQuery } from './get-issues.graphql';
 import { GetIssuesQuery, IssueItemFragment } from '@gql/graphql';
 import { IssuesQueryData, UseGetIssuesParams } from './interfaces';
-import { getQueryVariables } from './helpers';
+import { getIssuesQueryKey, getQueryVariables } from './helpers';
 
 // This could also be reworked into useInfiniteQuery and holding local state about the page number
 export function useGetIssues(params: UseGetIssuesParams) {
-  const { sortDirection, sortField, paginationCursor, paginationDirection } =
-    params;
   return useQuery<GetIssuesQuery, unknown, IssuesQueryData | null>({
-    queryKey: [
-      'get-issues',
-      { sortDirection, sortField },
-      { paginationCursor, paginationDirection },
-    ],
+    queryKey: getIssuesQueryKey(params),
     queryFn: async () => {
       return request(
         'https://api.github.com/graphql',

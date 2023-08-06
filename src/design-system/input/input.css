@@ -1,0 +1,15 @@
+.input-base {
+  width: 100%;
+  font-size: var(--font-size-m);
+  color: var(--text-primary);
+  line-height: 1;
+
+  padding: var(--space-xs) var(--space-s);
+  border: 1px solid var(--input-border);
+  border-radius: 3px;
+  background-color: var(--input-bg);
+
+  ::placeholder {
+    color: var(--input-placeholder);
+  }
+}

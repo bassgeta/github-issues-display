@@ -10,9 +10,17 @@
 
   --button-bg-primary: #133e7c;
   --button-bg-secondary: #0abdc6;
+  --button-bg-destructive: var(--bg-danger);
+
   --button-text-primary: var(--text-primary);
   --button-text-secondary: var(--text-primary);
+  --button-text-destructive: var(--text-primary);
+
   --button-bg-disabled: #666;
+
+  --input-bg: #493543;
+  --input-border: #6D536F;
+  --input-placeholder: #D6BFAA;
 
   --space-xxs: 4px;
   --space-xs: 8px;
@@ -42,6 +50,11 @@
 #root {
   width: 100%;
   height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+  word-wrap: break-word;
 }
 
 html, body, div, span, applet, object, iframe,

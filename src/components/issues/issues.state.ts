@@ -1,12 +1,12 @@
 import { IssueOrderField, OrderDirection } from '@gql/graphql';
 import { create } from 'zustand';
 
-interface SortingParams {
+export interface SortingParams {
   sortField: IssueOrderField;
   sortDirection: OrderDirection;
 }
 
-interface PaginationParams {
+export interface PaginationParams {
   paginationDirection: 'after' | 'before';
   paginationCursor: string;
 }
